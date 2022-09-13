@@ -1,0 +1,37 @@
+# this is my first server!
+
+from socket import *
+
+def createServer():
+    serversocket = socket(AF_INET, SOCK_STREAM)
+    try:
+        
+        
+        serversocket.bind(('localhost' , 9000))
+        serversocket.listen(5)
+        while(1):
+            (clientsocket, address) = serversocket.accept()
+
+            read_data = clientsocket.recv(5000).decode()
+            pieces = read_data.split("\n")
+            if ( len(pieces) > 0 ) : print(pieces[0])
+
+            data = "HTTP/1.1 200 OK\r\n"
+            data += "Content-Type: text/html; charest = utf-8\r\n"
+            data += "\r\n"
+            
+            data += "<html><body>this is my first time doing this lol, no body cares anyway!. </body></html>\r\n\r\n"
+            clientsocket.sendall(data.encode())
+            clientsocket.shutdown(SHUT_WR)
+
+    except KeyboardInterrupt :
+        print("\nShutting down ...\n");
+    except Exception as exc:
+        print("Error:\n");
+        print(exc)
+
+    serversocket.close()
+
+print('Access http://localhost:9000')
+createServer()
+
